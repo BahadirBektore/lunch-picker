@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lunch Picker</title>
+
+<style>
+
+:root{
+--bg:#f3f4f6;
+--card:white;
+--text:#333;
+--btn:#667eea;
+}
+
+body.dark{
+--bg:#1e1e2f;
+--card:#2c2c3c;
+--text:white;
+--btn:#9f7aea;
+}
+
+*{
+box-sizing:border-box;
+}
+
+body{
+font-family:Arial;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+background:var(--bg);
+margin:0;
+padding:20px;
+transition:0.3s;
+}
+
+.card{
+background:var(--card);
+color:var(--text);
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 20px rgba(0,0,0,0.1);
+text-align:center;
+width:100%;
+max-width:380px;
+}
+
+h2{
+margin-bottom:20px;
+}
+
+.input-group{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+}
+
+input{
+flex:1;
+padding:10px;
+border-radius:6px;
+border:1px solid #ccc;
+font-size:16px;
+}
+
+button{
+padding:10px 15px;
+cursor:pointer;
+border:none;
+background:var(--btn);
+color:white;
+border-radius:6px;
+font-size:15px;
+transition:0.2s;
+}
+
+button:hover{
+opacity:0.9;
+}
+
+.delete-btn{
+background:#e74c3c;
+font-size:12px;
+padding:6px 10px;
+}
+
+.pick-btn{
+width:100%;
+margin-top:10px;
+}
+
+.toggle{
+margin-top:15px;
+cursor:pointer;
+font-size:14px;
+opacity:0.8;
+}
+
+ul{
+list-style:none;
+padding:0;
+margin:15px 0;
+}
+
+li{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:6px;
+border-bottom:1px solid #eee;
+}
+
+.result{
+margin-top:15px;
+font-weight:bold;
+font-size:18px;
+min-height:24px;
+}
+
+/* mobile */
+
+@media (max-width:400px){
+
+.card{
+padding:20px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Lunch Picker 🍔</h2>
+
+<div class="input-group">
+<input id="nameInput" placeholder="Enter name">
+<button onclick="addName()">Add</button>
+</div>
+
+<ul id="nameList"></ul>
+
+<button class="pick-btn" onclick="pickName()">Pick Random Person</button>
+
+<div id="result" class="result"></div>
+
+<div id="modeToggle" class="toggle">🌙 Dark Mode</div>
+
+</div>
+
+<script>
+
+const names=[];
+
+const input=document.getElementById("nameInput");
+const list=document.getElementById("nameList");
+const result=document.getElementById("result");
+const toggle=document.getElementById("modeToggle");
+
+/* adding a name with enter */
+
+input.addEventListener("keydown",function(e){
+
+if(e.key==="Enter"){
+e.preventDefault();
+addName();
+}
+
+});
+
+/* add name */
+
+function addName(){
+
+const name=input.value.trim();
+
+if(name==="") return;
+
+names.push(name);
+
+const li=document.createElement("li");
+
+const span=document.createElement("span");
+span.textContent=name;
+
+const deleteBtn=document.createElement("button");
+deleteBtn.textContent="Delete";
+deleteBtn.classList.add("delete-btn");
+
+deleteBtn.onclick=function(){
+
+li.remove();
+
+const index=names.indexOf(name);
+if(index>-1){
+names.splice(index,1);
+}
+
+};
+
+li.appendChild(span);
+li.appendChild(deleteBtn);
+
+list.appendChild(li);
+
+input.value="";
+
+}
+
+/* random selection */
+
+function pickName(){
+
+if(names.length===0){
+
+result.textContent="Add some names first!";
+return;
+
+}
+
+const randomIndex=Math.floor(Math.random()*names.length);
+
+const randomName=names[randomIndex];
+
+result.textContent=randomName+" is buying lunch today!";
+
+}
+
+/* dark mode */
+
+toggle.addEventListener("click",function(){
+
+document.body.classList.toggle("dark");
+
+if(document.body.classList.contains("dark")){
+
+toggle.textContent="☀ Light Mode";
+
+}else{
+
+toggle.textContent="🌙 Dark Mode";
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
